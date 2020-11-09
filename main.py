@@ -9,11 +9,11 @@ def get_data():
     else:
         filepath = getenv('XDG_DATA_HOME') + '/pit2ya/timers.csv'
 
-    print('looking for timers at', filepath)
     timers = {}
     if not path.isfile(filepath):
         from csv import writer as csv_writer
         from toggl.api import TimeEntry
+        from pendulum import now
         print('config file not found... loading past month of toggl data')
         entries = TimeEntry.objects.all_from_reports(start=now().subtract(months=1), stop=now())
         print('    processing time entries...')
@@ -37,15 +37,23 @@ def get_data():
 
     return timers
 
-def begin_timer():
-    from iterfzf import iterfzf
-    query, desc = iterfzf(get_data().keys(), print_query=True)
+def begin_timer(desc, pid):
+    from toggl.api import TimeEntry
+    from pendulum import now
+    entry = TimeEntry.start_and_save(start=now(), description=desc, pid=pid)
+    entry.save()
 
-    from toggl import api
+def handle():
+    from iterfzf import iterfzf
+    timers = get_data()
+    query, desc = iterfzf(timers.keys(), print_query=True)
+
     if desc:
-        pass
+        begin_timer(desc, timers[desc])
+    else:
+        pass    # TODO: collect project information, allow creating new time entries
+        # project = input(f"Creating new time entry '{query}'... what project? ")
 
 if __name__ == '__main__':
-    # print(get_data())
-    begin_timer()
+    handle()
 
