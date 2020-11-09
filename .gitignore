@@ -1,4 +1,5 @@
 bin/
 lib/
 include/
+**/__pycache__/
 

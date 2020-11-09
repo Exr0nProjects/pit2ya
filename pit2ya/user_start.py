@@ -39,7 +39,7 @@ def get_data():
 
     return timers
 
-def begin_timer(desc, pid):
+def begin_timer_raw(desc, pid):
     from toggl.api import TimeEntry
     from pendulum import now
     if pid >= 0:
@@ -47,17 +47,17 @@ def begin_timer(desc, pid):
     else:
         TimeEntry.start_and_save(start=now(), pid=pid).save()
 
-def handle():
+def user_start():
     from iterfzf import iterfzf
     timers = get_data()
     query, desc = iterfzf(timers.keys(), print_query=True)
 
     if desc:
-        begin_timer(desc, timers[desc]['pid'])
+        begin_timer_raw(desc, timers[desc]['pid'])
     else:
         pass    # TODO: collect project information, allow creating new time entries
         # project = input(f"Creating new time entry '{query}'... what project? ")
 
 if __name__ == '__main__':
-    handle()
+    user_start()
 
