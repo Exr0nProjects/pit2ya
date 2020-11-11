@@ -1,3 +1,4 @@
 [console_scripts]
+pm = pit2ya.user_start:user_modify
 pt = pit2ya.user_start:user_start
 
