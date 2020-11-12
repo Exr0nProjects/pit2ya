@@ -1,11 +1,21 @@
 from dataclasses import dataclass
 
-class PriorityQueue:
+class PriorityMap:
     @dataclass(order=True)
     class PrioritizedTimer:
         from dataclasses import field
         priority: int
         description: str=field(compare=False)
+    def __init__(self):
+        self.positions = {}
+        self.heap = []
+
+    def __iter__(self):
+        pass # TODO
+    def remove(self, key: str):
+        pass
+    def insert(self, key: str):
+        pass
 
 
 def get_data():
