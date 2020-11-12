@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 
-@dataclass(order=True)
-class PrioritizedTimer:
-    from dataclasses import field
-    priority: int
-    description: str=field(compare=False)
+class PriorityQueue:
+    @dataclass(order=True)
+    class PrioritizedTimer:
+        from dataclasses import field
+        priority: int
+        description: str=field(compare=False)
+
 
 def get_data():
     from pickle import dump, load
