@@ -1,22 +1,31 @@
 from dataclasses import dataclass
 
-class PriorityMap:
-    @dataclass(order=True)
-    class PrioritizedTimer:
-        from dataclasses import field
-        priority: int
-        description: str=field(compare=False)
-    def __init__(self):
-        self.positions = {}
-        self.heap = []
+# @dataclass(order=True)
+# class PrioritizedTimer:
+#     from dataclasses import field
+#     priority: int
+#     description: str=field(compare=False)
 
-    def __iter__(self):
-        pass # TODO
-    def remove(self, key: str):
-        pass
-    def insert(self, key: str):
-        pass
-
+# this doesn't work.. no way of updating priorities
+# from queue import PriorityQueue
+# from random import randint
+# class PrioritizedTimer(object):
+#     def __init__(self, description: str, priority: int):
+#         self.desc = description
+#         self.priority = priority
+#     def __lt__(self, other):
+#         return self.priority > other.priority
+#     def __repr__(self):
+#         return f'PriTim({self.desc}, {self.priority})'
+#
+# if __name__ == '__main__':
+#     pq = PriorityQueue()
+#     for i in range(10):
+#         r = randint(1, 1000)
+#         print('inserting', r)
+#         pq.put(PrioritizedTimer('hi ' + str(r), r))
+#     for i in range(10):
+#         print(pq.get())
 
 def get_data():
     from pickle import dump, load
