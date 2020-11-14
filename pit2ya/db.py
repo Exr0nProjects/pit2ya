@@ -7,7 +7,7 @@ dirpath = filepath[:filepath.rfind('/')]
 
 def api_and_yield(path, days, timers):
     with open(path, 'w+', newline='') as wof:
-        wf = csv_writer(wof)
+        wf = writer(wof)
         for timer in get_timers(days, silent=days>7):
             if not timer['desc'] in timers:
                 wf.writerow([timer['desc'], timer['pid']])
@@ -20,8 +20,8 @@ class get_data():   # https://stackoverflow.com/q/34073370
 
     def __iter__(self):
         if path.isfile(filepath):
-            with open(filepath, 'r', newline='') as rf:
-                for row in enumerate(reader(rf)): # TODO: convert to dict reader sometime? is it faster?
+            with open(filepath, 'r', newline='') as rof:
+                for row in enumerate(reader(rof)): # TODO: convert to dict reader sometime? is it faster?
                     # yield { 'desc': row[0], 'pid': int(row[1]) }
                     self.timers[row[1][0]] = { 'pid': int(row[1][1] or -1) }
                     yield row[1][0]
@@ -33,6 +33,11 @@ class get_data():   # https://stackoverflow.com/q/34073370
             print('cached data file not found... loading past toggl data')
             yield from api_and_yield(filepath, 3, self.timers)
 
-async def set_data(timers, recent):
-    with open(
+def set_data(timers, recent):
+    with open(filepath, 'w+', newline='') as wof:    # TODO: delete the line instead of rewriting. or use an actual database
+        wf = writer(wof)
+        wf.writerow([recent, timers[recent]['pid']])
+        for timer in timers:
+            if timer is not recent:
+                wf.writerow([timer, timers[timer]['pid']])
 

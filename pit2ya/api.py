@@ -18,9 +18,8 @@ def user_modify():
     from toggl.api import TimeEntry
     cur = TimeEntry.objects.current()
     if cur is None:
-        print('No current running timer!')
+        print('No current running timer! starting a new one..')
         begin_timer_raw(desc, desc_list.timers[desc]['pid'])
-        set_data(desc_list.timers, desc)
     elif desc:
         setattr(cur, 'description', desc)
         setattr(cur, 'project', desc_list.timers[desc]['pid'])
