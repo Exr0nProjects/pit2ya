@@ -14,6 +14,9 @@ def user_start():
 def user_modify():
     from iterfzf import iterfzf
     desc_list = get_data()
+    # for i,e in enumerate(desc_list):
+    #     if i > 20:
+    #         break
     query, desc = iterfzf(desc_list, print_query=True, extended=True)
     from toggl.api import TimeEntry
     cur = TimeEntry.objects.current()
@@ -29,6 +32,5 @@ def user_modify():
         setattr(cur, 'description', desc)
         setattr(cur, 'project', desc_list.timers[desc]['pid'])
         cur.save()
-    set_data(desc_list.timers, desc)
-
+    # set_data(desc_list, desc)
 
