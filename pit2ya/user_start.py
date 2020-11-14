@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import dataclass
 
 # @dataclass(order=True)
@@ -27,8 +28,10 @@ from dataclasses import dataclass
 #     for i in range(10):
 #         print(pq.get())
 
-def get_data():
+async def get_data():
     from pickle import dump, load
+    from toggl.api import TimeEntry
+    from pendulum import now
     from os import getenv, path
     filepath = getenv('PIT2YA_DIRPATH') or getenv('XDG_DATA_HOME') + '/pit2ya/timers.pykle'
     timers = {}
@@ -36,25 +39,23 @@ def get_data():
         with open(filepath, 'rb') as rf:
             timers = load(rf)
     else:
-        from csv import writer as csv_writer
-        from toggl.api import TimeEntry
-        from pendulum import now
-        from os import mkdir
-        print('config file not found... loading past month of toggl data')
-        entries = TimeEntry.objects.all_from_reports(start=now().subtract(months=1), stop=now())
-        print('    processing time entries...')
-        if not path.isdir(filepath[:filepath.rfind('/')]):
-            mkdir(filepath[:filepath.rfind('/')])
-        seen = set()
-        for i,e in enumerate(entries):
-            if e.description not in seen:
-                seen.add(e.description)
-                timers[e.description] = { 'pid': int(e.pid or -1) }
-                # writer.writerow((e.description, e.pid or -1))
-            if i % 10 == 0:
-                print(f'processed {i} entries', end='\r')
-        with open(filepath, 'wb') as wf:
-            dump(timers, wf)
+        print("Pit2ya data not found... please try again after data has been processed")
+        # from os import mkdir
+        # print('config file not found... loading past month of toggl data')
+        # entries = TimeEntry.objects.all_from_reports(start=now().subtract(months=1), stop=now())
+        # print('    processing time entries...')
+        # if not path.isdir(filepath[:filepath.rfind('/')]):
+        #     mkdir(filepath[:filepath.rfind('/')])
+        # seen = set()
+        # for i,e in enumerate(entries):
+        #     if e.description not in seen:
+        #         seen.add(e.description)
+        #         timers[e.description] = { 'pid': int(e.pid or -1) }
+        #         # writer.writerow((e.description, e.pid or -1))
+        #     if i % 10 == 0:
+        #         print(f'processed {i} entries', end='\r')
+        # with open(filepath, 'wb') as wf:
+        #     dump(timers, wf)
     return timers
 
 def begin_timer_raw(desc, pid):
@@ -65,9 +66,9 @@ def begin_timer_raw(desc, pid):
     else:
         TimeEntry.start_and_save(start=now(), pid=pid).save()
 
-def user_start():
+async def user_start():
     from iterfzf import iterfzf
-    timers = get_data()
+    timers = await get_data()
     query, desc = iterfzf(timers.keys(), print_query=True, extended=True)
 
     if desc:
@@ -75,9 +76,9 @@ def user_start():
     else:
         pass    # TODO: collect project information, allow creating new time entries
         # project = input(f"Creating new time entry '{query}'... what project? ")
-def user_modify():
+async def user_modify():
     from iterfzf import iterfzf
-    timers = get_data()
+    timers = await get_data()
     query, desc = iterfzf(timers.keys(), print_query=True, extended=True)
 
     from toggl.api import TimeEntry
@@ -91,6 +92,12 @@ def user_modify():
         setattr(cur, 'project', timers[desc]['pid'])
         cur.save()
 
+def entry_start():
+    asyncio.run(user_start())
+
+def entry_modify():
+    asyncio.run(user_modify())
+
 if __name__ == '__main__':
-    user_start()
+    entry_start()
 

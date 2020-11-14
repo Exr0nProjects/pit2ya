@@ -20,8 +20,8 @@ setup(
         packages = find_packages(),
         entry_points ={
             'console_scripts': [
-                'pt=pit2ya.user_start:user_modify',
-                'pn=pit2ya.user_start:user_start'
+                'pt=pit2ya.user_start:entry_modify',
+                'pn=pit2ya.user_start:entry_start'
             ]
         },
         classifiers =[
