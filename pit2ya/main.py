@@ -11,4 +11,6 @@ def entry_modify():
 
 if __name__ == '__main__':
     # entry_start()
-    print(asyncio.run(get_data()))
+    for i in get_data():
+        print(i)
+
