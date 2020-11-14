@@ -20,8 +20,16 @@ def user_modify():
     if cur is None:
         print('No current running timer!')
         begin_timer_raw(desc, desc_list.timers[desc]['pid'])
+        set_data(desc_list.timers, desc)
     elif desc:
         setattr(cur, 'description', desc)
         setattr(cur, 'project', desc_list.timers[desc]['pid'])
         cur.save()
+    else:       # create a whole new timer
+        desc = query
+        setattr(cur, 'description', desc)
+        setattr(cur, 'project', desc_list.timers[desc]['pid'])
+        cur.save()
+    set_data(desc_list.timers, desc)
+
 
