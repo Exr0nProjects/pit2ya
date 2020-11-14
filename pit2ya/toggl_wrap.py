@@ -6,7 +6,7 @@ def begin_timer_raw(desc, pid):
     else:
         TimeEntry.start_and_save(start=now(), pid=pid).save()
 
-def get_timers(days):
+def get_timers(days, silent=True):
     from toggl.api import TimeEntry
     from pendulum import now
     entries = TimeEntry.objects.all_from_reports(start=now().subtract(days=days), stop=now())
@@ -15,7 +15,7 @@ def get_timers(days):
         if e.description not in seen:
             seen.add(e.description)
             yield { 'desc': e.description, 'pid': int(e.pid or -1) }
-        if i % 10 == 0:
+        if not silent and i % 10 == 0:
             print(f'processed {i} entries', end='\r')
-    print("finished processing time entries!")
+    if not silent: print("finished processing time entries!")
 
