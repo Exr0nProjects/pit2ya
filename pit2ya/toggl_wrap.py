@@ -10,12 +10,12 @@ def get_timers(days):
     from toggl.api import TimeEntry
     from pendulum import now
     entries = TimeEntry.objects.all_from_reports(start=now().subtract(days=days), stop=now())
-    seen = set()
-    timers = {}
+    seen = {}
+    timers = []
     for i,e in enumerate(entries):
         if e.description not in seen:
-            seen.add(e.description)
-            timers[e.description] = { 'pid': int(e.pid or -1) }
+            seen[e.description] = i
+            timers.append({ 'desc': e.description, 'pid': int(e.pid or -1) })
         if i % 10 == 0:
             print(f'processed {i} entries', end='\r')
     print("finished processing time entries!")
