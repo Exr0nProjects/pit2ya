@@ -12,12 +12,5 @@ def entry_modify():
 
 if __name__ == '__main__':
     # entry_start()
-    # entry_modify()
-    gen = get_data()
-    for i,e in enumerate(gen):
-        print(e)
-        if i > 10:
-            break
-    for i,e in enumerate(gen):
-        print(i, e)
+    entry_modify()
 

@@ -5,7 +5,7 @@ from toggl_wrap import begin_timer_raw
 def user_start():
     from iterfzf import iterfzf
     desc_list = get_data()
-    query, desc = iterfzf(desc_list.__iter__(), print_query=True, extended=True)
+    query, desc = iterfzf(desc_list, print_query=True, extended=True)
     if desc:
         begin_timer_raw(desc, desc_list.timers[desc]['pid'])
     else:
@@ -18,7 +18,7 @@ def user_modify():
     # for i,e in enumerate(desc_list):
     #     if i > 20:
     #         break
-    query, desc = iterfzf(desc_list.__iter__(), print_query=True, extended=True)
+    query, desc = iterfzf(desc_list, print_query=True, extended=True)
     from toggl.api import TimeEntry
     cur = TimeEntry.objects.current()
     if cur is None:
