@@ -1,6 +1,6 @@
 import asyncio
-from api import user_start, user_modify
-from db import get_data
+from pit2ya.api import user_start, user_modify
+# from db import get_data
 
 def entry_start():
 #    asyncio.run(user_start())

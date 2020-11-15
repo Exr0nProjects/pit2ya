@@ -1,6 +1,6 @@
 import asyncio
-from db import get_data, set_data
-from toggl_wrap import begin_timer_raw
+from pit2ya.db import get_data, set_data
+from pit2ya.toggl_wrap import begin_timer_raw
 
 def user_start():
     from iterfzf import iterfzf
@@ -9,15 +9,12 @@ def user_start():
     if desc:
         begin_timer_raw(desc, desc_list.timers[desc]['pid'])
     else:
-        pass    # TODO: collect project information, allow creating new time entries
-    # set_data(desc_list, desc)  # TODO: put in
+        return    # TODO: collect project information, allow creating new time entries
+    set_data(desc_list, desc)
 
 def user_modify():
     from iterfzf import iterfzf
     desc_list = get_data()
-    # for i,e in enumerate(desc_list):
-    #     if i > 20:
-    #         break
     query, desc = iterfzf(desc_list, print_query=True, extended=True)
     from toggl.api import TimeEntry
     cur = TimeEntry.objects.current()
@@ -28,10 +25,14 @@ def user_modify():
         setattr(cur, 'description', desc)
         setattr(cur, 'project', desc_list.timers[desc]['pid'])
         cur.save()
-    else:       # create a whole new timer
-        desc_list.timers[query] = desc_list.timers[desc]
+    elif query:       # create a whole new timer
+        print('Creating new timer', query, 'with current details...')
+        desc_list.timers[query] = { 'pid': int(cur.pid or -1) }
         desc = query
         setattr(cur, 'description', desc)
         cur.save()
+    else:
+        print('No input! Abort.')
+        return
     set_data(desc_list, desc)
 

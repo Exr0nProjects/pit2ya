@@ -1,4 +1,4 @@
-from toggl_wrap import get_timers
+from pit2ya.toggl_wrap import get_timers
 from os import getenv, path, replace
 from csv import reader, writer
 from itertools import chain

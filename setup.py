@@ -9,7 +9,7 @@ long_description = 'More ergonomic wrapper around TogglCli for continuing Toggl 
 
 setup(
         name ='Pit2ya',
-        version ='0.2.0',
+        version ='0.3.2a2',
         author ='Exr0n',
         author_email ='mail@exr0n.com',
         url ='https://github.com/Exr0nProjects/pit2ya',
@@ -20,8 +20,8 @@ setup(
         packages = find_packages(),
         entry_points ={
             'console_scripts': [
-                'pt=pit2ya.user_start:entry_modify',
-                'pn=pit2ya.user_start:entry_start'
+                'pit2ya_mod=pit2ya.entry:entry_modify',
+                'pit2ya_crt=pit2ya.entry:entry_start'
             ]
         },
         classifiers =[
