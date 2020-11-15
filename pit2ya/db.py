@@ -7,13 +7,10 @@ filepath = getenv('PIT2YA_DIRPATH') or getenv('XDG_DATA_HOME') + '/pit2ya/timers
 dirpath = filepath[:filepath.rfind('/')]
 
 def api_and_yield(path, days, timers):
-    with open(path, 'w+', newline='') as wof:
-        wf = writer(wof)
-        for timer in get_timers(days):
-            if not timer['desc'] in timers:
-                # wf.writerow([timer['desc'], timer['pid']])
-                timers[timer['desc']] = { 'pid': timer['pid'] }
-                yield timer['desc']
+    for timer in get_timers(days):
+        if not timer['desc'] in timers:
+            timers[timer['desc']] = { 'pid': timer['pid'] }
+            yield timer['desc']
 
 class get_data():   # https://stackoverflow.com/q/34073370
     def __init__(self):
@@ -52,5 +49,5 @@ def set_data(desc_list, recent):
         for timer_k in chain(desc_list.timers, desc_list):
             if timer_k is not recent:
                 wf.writerow([timer_k, desc_list.timers[timer_k]['pid']])
-        replace(filepath + '.bak', filepath)
+    replace(filepath + '.bak', filepath)
 
