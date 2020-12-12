@@ -7,3 +7,7 @@ def entry_start():
 def entry_modify():
     user_modify()
 
+def get_current():
+    from toggl.api import TimeEntry
+    print(TimeEntry.objects.current().description)
+

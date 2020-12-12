@@ -43,6 +43,8 @@ class get_data():   # https://stackoverflow.com/q/34073370
             return next(self.recent_gen)
 
 def set_data(desc_list, recent):
+    with open(dirpath + '/current.desc', 'w+') as wf:
+        wf.write(recent + '\n')
     with open(filepath + '.bak', 'w+', newline='') as wof:    # TODO: delete the line instead of rewriting. or use an actual database
         wf = writer(wof)
         wf.writerow([recent, desc_list.timers[recent]['pid']])
