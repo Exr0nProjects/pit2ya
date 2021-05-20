@@ -45,8 +45,7 @@ def user_modify():
         return
 
     #cache_projects(cur)
-    set_data(desc_list, desc, pid=cur.pid, color=c.project.hex_color)
+    set_data(desc_list, desc, pid=cur.pid, color=cur.project.hex_color)
 
-    print(cur)
     return cur
 
