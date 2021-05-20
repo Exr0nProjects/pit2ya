@@ -2,9 +2,11 @@ def begin_timer_raw(desc, pid):
     from toggl.api import TimeEntry
     from pendulum import now
     if pid >= 0:
-        TimeEntry.start_and_save(start=now(), description=desc, pid=pid).save()
+        cur = TimeEntry.start_and_save(start=now(), description=desc, pid=pid)
     else:
-        TimeEntry.start_and_save(start=now(), pid=pid).save()
+        cur = TimeEntry.start_and_save(start=now(), pid=pid)
+    cur.save()
+    return cur
 
 def get_timers(days):
     from toggl.api import TimeEntry

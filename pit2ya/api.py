@@ -1,6 +1,6 @@
 import asyncio
 from datetime import datetime
-from pit2ya.db import get_data, set_data
+from pit2ya.db import get_data, set_data, cache_projects
 from pit2ya.toggl_wrap import begin_timer_raw
 
 #local = datetime.timezone(#TODO
@@ -9,12 +9,15 @@ def user_start():
     from iterfzf import iterfzf
     desc_list = get_data()
     query, desc = iterfzf(desc_list, print_query=True, extended=True)
+    proj = desc_list.timers[desc]['pid']
     if desc:
-        begin_timer_raw(desc, desc_list.timers[desc]['pid'])
+        cur = begin_timer_raw(desc, proj)
         print(f"'{desc}'ing since {datetime.now().strftime('%H:%M:%S')}")
     else:
         return    # TODO: collect project information, allow creating new time entries
-    set_data(desc_list, desc)
+    set_data(desc_list, desc, pid=proj, start=datetime.now(), color=cur.project.hex_color)
+
+    return cur
 
 def user_modify():
     from iterfzf import iterfzf
@@ -40,5 +43,10 @@ def user_modify():
     else:
         print('No input! Abort.')
         return
-    set_data(desc_list, desc)
+
+    #cache_projects(cur)
+    set_data(desc_list, desc, pid=cur.pid, color=c.project.hex_color)
+
+    print(cur)
+    return cur
 

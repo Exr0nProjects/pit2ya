@@ -2,6 +2,7 @@ from pit2ya.toggl_wrap import get_timers
 from os import getenv, path, replace
 from csv import reader, writer
 from itertools import chain
+from pathlib import Path
 
 filepath = getenv('PIT2YA_DIRPATH') or getenv('XDG_DATA_HOME') + '/pit2ya/timers.csv'
 dirpath = filepath[:filepath.rfind('/')]
@@ -42,9 +43,18 @@ class get_data():   # https://stackoverflow.com/q/34073370
         else: # can't just else because it might have changed
             return next(self.recent_gen)
 
-def set_data(desc_list, recent):
+def set_data(desc_list, recent, pid=None, start=None, color=None):
     with open(dirpath + '/current.desc', 'w+') as wf:
         wf.write(recent + '\n')
+    if pid is not None:
+        with open(dirpath + '/current.proj', 'w+') as wf:
+            wf.write(str(pid) + '\n')
+    if start is not None:
+        with open(dirpath + '/current.start', 'w+') as wf:
+            wf.write(f'{round(start.timestamp())}\n')
+    if color is not None:
+        with open(dirpath + '/current.color', 'w+') as wf:
+            wf.write(color + '\n')
     with open(filepath + '.bak', 'w+', newline='') as wof:    # TODO: delete the line instead of rewriting. or use an actual database
         wf = writer(wof)
         wf.writerow([recent, desc_list.timers[recent]['pid']])
@@ -52,4 +62,10 @@ def set_data(desc_list, recent):
             if timer_k is not recent:
                 wf.writerow([timer_k, desc_list.timers[timer_k]['pid']])
     replace(filepath + '.bak', filepath)
+
+def cache_projects(cur):
+    proj_color_path = dirpath + '/projects_' + str(cur.pid) + '.color'
+    if not Path(proj_color_path).exists():
+        with open(proj_color_path, 'w+') as wf:
+            wf.write(cur.project.hex_color + '\n')
 
