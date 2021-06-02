@@ -9,7 +9,7 @@ long_description = 'More ergonomic wrapper around TogglCli for continuing Toggl 
 
 setup(
         name ='Pit2ya',
-        version ='0.4.1',
+        version ='0.4.2',
         author ='Exr0n',
         author_email ='mail@exr0n.com',
         url ='https://github.com/Exr0nProjects/pit2ya',
